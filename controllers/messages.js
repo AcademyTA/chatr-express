@@ -24,7 +24,7 @@ module.exports = {
   async update (req, res, next) {
     const {id} = req.params;
     const {username, flagged, content} = req.body;
-
+    console.log('>>>>>>>>>>>>>>>>>>', req.body)
     try {
       const message = await Message.findById(id);
       await message.update({username, content, flagged});

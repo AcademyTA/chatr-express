@@ -1,12 +1,15 @@
 const MessageList = document.getElementById('messages')
 const MessageForm = document.getElementById('new-message')
+const Headers     = {'Content-Type': 'application/json'}
 
-const Headers = {'Content-Type': 'application/json'}
+const AllMessagesButton       = document.getElementById('all')
+const FlaggedMessagesButton   = document.getElementById('flagged')
+const UnflaggedMessagesButton = document.getElementById('unflagged')
+
+let AllMessageData = []
 
 function getAllMessages() {
-  fetch('/messages')
-    .then(response => response.json())
-    .then(renderMessages)
+  return fetch('/messages').then(response => response.json())
 }
 
 function createMessage(message) {
@@ -21,7 +24,13 @@ function setFlagStatus(id, status) {
     headers: Headers,
     method: 'PATCH',
     body: JSON.stringify({ flagged: status })
-  }).then(getAllMessages)
+  }).then(() => {
+    getAllMessages()
+      .then((messages) => {
+        AllMessageData = messages
+        renderMessages(messages)
+      })
+  })
 }
 
 function renderMessages(messages) {
@@ -67,6 +76,34 @@ MessageForm.addEventListener('submit', (event) => {
   createMessage(formData)
 })
 
+AllMessagesButton.addEventListener('click', (event) => {
+  event.preventDefault()
+
+  getAllMessages()
+    .then((messages) => {
+      AllMessageData = messages
+      renderMessages(messages)
+    })
+})
+
+FlaggedMessagesButton.addEventListener('click', (event) => {
+  event.preventDefault()
+
+  flaggedMessages = AllMessageData.filter(message => message.flagged)
+  renderMessages(flaggedMessages)
+})
+
+UnflaggedMessagesButton.addEventListener('click', (event) => {
+  event.preventDefault()
+
+  unflaggedMessages = AllMessageData.filter(message => !message.flagged)
+  renderMessages(unflaggedMessages)
+})
+
 document.addEventListener('DOMContentLoaded', () => {
   getAllMessages()
+    .then((messages) => {
+      AllMessageData = messages
+      renderMessages(messages)
+    })
 }, false);

@@ -1,28 +1,27 @@
-const MessageList   = document.getElementById('messages')
-const MessageForm   = document.getElementById('new-message')
-const FormTitle     = document.querySelector("h3")
-const UsernameInput = document.querySelector("input[name='username']")
-const MessageBody   = document.querySelector("textarea[name='content']")
-const EditMessageId = document.querySelector("input[name='edit_message_id']")
-const SubmitButton  = document.querySelector("input[type='submit']")
-const UpdateButton  = document.querySelector("button[type='submit']")
-const ResetButton   = document.querySelector("button[type='reset']")
-const Headers       = {'Content-Type': 'application/json'}
+const MessageList   = document.getElementById("messages");
+const MessageForm   = document.getElementById("new-message");
+const FormTitle     = document.querySelector("h3");
+const UsernameInput = document.querySelector("input[name='username']");
+const MessageBody   = document.querySelector("textarea[name='content']");
+const EditMessageId = document.querySelector("input[name='edit_message_id']");
+const SubmitButton  = document.querySelector("input[type='submit']");
+const UpdateButton  = document.querySelector("button[type='submit']");
+const ResetButton   = document.querySelector("button[type='reset']");
+const Headers       = { "Content-Type": "application/json" };
 
-const AllMessagesButton       = document.getElementById('all')
-const FlaggedMessagesButton   = document.getElementById('flagged')
-const UnflaggedMessagesButton = document.getElementById('unflagged')
+const AllMessagesButton       = document.getElementById("all");
+const FlaggedMessagesButton   = document.getElementById("flagged");
+const UnflaggedMessagesButton = document.getElementById("unflagged");
 
-
-let AllMessageData = []
+let AllMessageData = [];
 
 function getAllMessages() {
-  return fetch('/messages').then(response => response.json())
+  return fetch("/messages").then(response => response.json());
 }
 
 function createMessage(message) {
-  fetch('/messages', {
-    method: 'POST',
+  fetch("/messages", {
+    method: "POST",
     body: message
   })
   .then(getAllMessages)
@@ -61,8 +60,8 @@ function setFlagStatus(id, status) {
 
 function renderMessages(messages) {
   MessageList.innerHTML = messages.map((msg) => {
-    const edit = `<i class="fa fa-pencil-square-o" data-id="${msg.id}"></i>`
-    const flag = renderFlagElement(msg)
+    const edit = `<i class="fa fa-pencil-square-o" data-id="${msg.id}"></i>`;
+    const flag = renderFlagElement(msg);
 
     return `
       <li>
@@ -72,108 +71,106 @@ function renderMessages(messages) {
         </div>
       </li>
     `
-  }).join('')
+  }).join('');
 
-  addFlagClickHandler()
-  addMessageClickHandler()
+  addFlagClickHandler();
+  addMessageClickHandler();
 }
 
 function renderFlagElement(message) {
   if (message.flagged) {
-    return `<i class="fa fa-flag" data-id="${message.id}" data-flagged="${message.flagged}"></i>`
+    return `<i class="fa fa-flag" data-id="${message.id}" data-flagged="${message.flagged}"></i>`;
   } else {
-    return `<i class="fa fa-flag-o" data-id="${message.id}" data-flagged="${message.flagged}"></i>`
+    return `<i class="fa fa-flag-o" data-id="${message.id}" data-flagged="${message.flagged}"></i>`;
   }
 }
 
 function addFlagClickHandler() {
-  const flags = document.querySelectorAll('i.fa.fa-flag, i.fa.fa-flag-o')
+  const flags = document.querySelectorAll('i.fa.fa-flag, i.fa.fa-flag-o');
 
-  flags.forEach((flag) => {
-    flag.addEventListener('click', (event) => {
-      event.preventDefault()
+  flags.forEach(flag => {
+    flag.addEventListener("click", event => {
+      event.preventDefault();
 
-      let messageId  = event.currentTarget.dataset.id
-      let flagStatus = event.currentTarget.dataset.flagged === 'false'
+      let messageId = event.currentTarget.dataset.id;
+      let flagStatus = event.currentTarget.dataset.flagged === "false";
 
-      setFlagStatus(messageId, flagStatus)
-    })
-  })
+      setFlagStatus(messageId, flagStatus);
+    });
+  });
 }
 
 function addMessageClickHandler() {
-  const editIcons     = document.querySelectorAll('i.fa.fa-pencil-square-o')
+  const editIcons = document.querySelectorAll("i.fa.fa-pencil-square-o");
 
-  editIcons.forEach((message) => {
-    message.addEventListener('click', (event) => {
+  editIcons.forEach(message => {
+    message.addEventListener("click", event => {
       event.preventDefault()
 
-      let messageId       = event.currentTarget.dataset.id
-      let selectedMessage = AllMessageData.find(msg => msg.id == messageId)
+      let messageId       = event.currentTarget.dataset.id;
+      let selectedMessage = AllMessageData.find(msg => msg.id == messageId);
 
-      EditMessageId.value        = messageId
-      UsernameInput.value        = selectedMessage.username
-      MessageBody.value          = selectedMessage.content
-      MessageForm.classList      = 'edit_message'
-      FormTitle.textContent      = 'Update Message'
-      SubmitButton.style.display = 'none'
-      UpdateButton.style.display = 'inline'
-      ResetButton.style.display  = 'inline'
-    })
-  })
+      EditMessageId.value        = messageId;
+      UsernameInput.value        = selectedMessage.username;
+      MessageBody.value          = selectedMessage.content;
+      MessageForm.classList      = "edit_message";
+      FormTitle.textContent      = "Update Message";
+      SubmitButton.style.display = "none";
+      UpdateButton.style.display = "inline";
+      ResetButton.style.display  = "inline";
+    });
+  });
 }
 
 function resetMessageForm() {
-  EditMessageId.value        = ''
-  MessageForm.classList      = ''
-  FormTitle.textContent      = 'Post Message'
-  SubmitButton.style.display = 'inline'
-  UpdateButton.style.display = 'none'
-  ResetButton.style.display  = 'none'
+  EditMessageId.value        = "";
+  MessageForm.classList      = "";
+  FormTitle.textContent      = "Post Message";
+  SubmitButton.style.display = "inline";
+  UpdateButton.style.display = "none";
+  ResetButton.style.display  = "none";
 
-  MessageForm.reset()
+  MessageForm.reset();
 }
 
-MessageForm.addEventListener('submit', (event) => {
-  event.preventDefault()
+MessageForm.addEventListener("submit", event => {
+  event.preventDefault();
 
-  let formData = new FormData(event.currentTarget)
+  let formData = new FormData(event.currentTarget);
 
   if (event.currentTarget.className == "edit_message") {
-    updateMessage(formData, EditMessageId.value)
+    updateMessage(formData, EditMessageId.value);
   } else {
-    createMessage(formData)
+    createMessage(formData);
   }
-})
+});
 
-AllMessagesButton.addEventListener('click', (event) => {
-  event.preventDefault()
+AllMessagesButton.addEventListener("click", event => {
+  event.preventDefault();
 
-  getAllMessages()
-    .then((messages) => {
-      AllMessageData = messages
-      renderMessages(messages)
-    })
-})
+  getAllMessages().then(messages => {
+    AllMessageData = messages;
+    renderMessages(messages);
+  });
+});
 
-FlaggedMessagesButton.addEventListener('click', (event) => {
-  event.preventDefault()
+FlaggedMessagesButton.addEventListener("click", event => {
+  event.preventDefault();
 
-  flaggedMessages = AllMessageData.filter(message => message.flagged)
-  renderMessages(flaggedMessages)
-})
+  flaggedMessages = AllMessageData.filter(message => message.flagged);
+  renderMessages(flaggedMessages);
+});
 
-UnflaggedMessagesButton.addEventListener('click', (event) => {
-  event.preventDefault()
+UnflaggedMessagesButton.addEventListener("click", event => {
+  event.preventDefault();
 
-  unflaggedMessages = AllMessageData.filter(message => !message.flagged)
-  renderMessages(unflaggedMessages)
-})
+  unflaggedMessages = AllMessageData.filter(message => !message.flagged);
+  renderMessages(unflaggedMessages);
+});
 
 document.addEventListener('DOMContentLoaded', () => {
-  getAllMessages()
-    .then((messages) => {
-      AllMessageData = messages
-      renderMessages(messages)
-    })
+  getAllMessages().then(messages => {
+    AllMessageData = messages;
+    renderMessages(messages);
+  });
 }, false);

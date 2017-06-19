@@ -168,6 +168,11 @@ UnflaggedMessagesButton.addEventListener("click", event => {
   renderMessages(unflaggedMessages);
 });
 
+ResetButton.addEventListener("click", event => {
+  event.preventDefault();
+  resetMessageForm()
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   getAllMessages().then(messages => {
     AllMessageData = messages;

@@ -157,14 +157,14 @@ AllMessagesButton.addEventListener("click", event => {
 FlaggedMessagesButton.addEventListener("click", event => {
   event.preventDefault();
 
-  flaggedMessages = AllMessageData.filter(message => message.flagged);
+  let flaggedMessages = AllMessageData.filter(message => message.flagged);
   renderMessages(flaggedMessages);
 });
 
 UnflaggedMessagesButton.addEventListener("click", event => {
   event.preventDefault();
 
-  unflaggedMessages = AllMessageData.filter(message => !message.flagged);
+  let unflaggedMessages = AllMessageData.filter(message => !message.flagged);
   renderMessages(unflaggedMessages);
 });
 

@@ -3,10 +3,21 @@
 <h1>Chatr</h1>
 
 <form id="new-message">
-  <textarea name="content" placeholder="Type your message..."></textarea>
+  <h3>Post Message</h3>
+  <input name="username" type="text" placeholder="Username..." />
+  <br><br>
+  <textarea name="content" type="text" placeholder="Type your message..."></textarea>
+  <input type="hidden" name="edit_message_id" value="">
   <input type="submit" value='Post Message' />
+  <button type="submit" value="Update Message">Update Message</button>
+  <button type="reset" value="Reset">Reset</button>
 </form>
 
-<ul id="messages"></ul>
+<div>
+  <a id="all" href="all">All Messages</a>
+  <a id="flagged" href="flagged">Flagged</a>
+  <a id="unflagged" href="unflagged">Not Flagged</a>
+  <ul id="messages"></ul>
+</div>
 
 <%- include('../partials/footer') %>
